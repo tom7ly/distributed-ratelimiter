@@ -40,6 +40,8 @@ docker-compose up
 It takes time for all services to be ready, and as such, the gateway-lb, which initiates a healthcheck polling on startup, wont allow any requests to pass through and will respond 
 with an error saying which services are up. It takes about 30 seconds for all services to become ready.
 
+## Note3
+If the frontend crashes on startup, simply refresh the browser, it's because the services weren't up in time and I didnt manage to add a check for that yet.
 
 # How the Ratelimiters work:
 The environment has ratelimit-instances and ratelimit-services
@@ -47,7 +49,16 @@ The environment has ratelimit-instances and ratelimit-services
 ratelimit-instance: the mechanism configured globally to limit x-requests in a timewindow of y-seconds
 ratelimit-svc-i: the actual contained service that is recieving requests from the gateway-lb 
 ``` 
+Currently there are 2 ratelimit-instances configured as follows:
+```
+RATELIMIT1_WINDOW=15
+RATELIMIT1_MAX=3
 
+RATELIMIT2_WINDOW=30
+RATELIMIT2_MAX=6
+```
+Where the the RATELIMIT_WINDOW-I means how many requests a ratelimit-instance approves before it starts blocking.
+You can configure it in /ratelimit-svc/.env
 #
 
 - The gateway recieves a response
