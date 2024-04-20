@@ -1,0 +1,90 @@
+{
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "gw-debug",
+            "runtimeExecutable": "npm",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "cwd": "${workspaceFolder}/gateway-lb",
+            "runtimeArgs": [
+                "run-script",
+                "start",
+                "--inspect"
+            ],
+            "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "logger-debug",
+            "runtimeExecutable": "npm",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "cwd": "${workspaceFolder}/logger-svc",
+            "runtimeArgs": [
+                "run-script",
+                "start",
+                "--inspect"
+            ],
+            "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "phonebook-debug",
+            "runtimeExecutable": "npm",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "cwd": "${workspaceFolder}/phonebook-svc",
+            "runtimeArgs": [
+                "run-script",
+                "start",
+                "--inspect"
+            ],
+            "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "ratelimiter-debug",
+            "runtimeExecutable": "npm",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "cwd": "${workspaceFolder}/ratelimiter-svc",
+            "runtimeArgs": [
+                "run-script",
+                "start",
+                "--inspect"
+            ],
+            "outputCapture": "std"
+        },
+        {
+            "name": "fe-svc-debug",
+            "type": "msedge",
+            "request": "launch",
+            "url": "http://localhost:7000",
+            "webRoot": "${workspaceFolder}/fe-svc",
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/fe-svc/../**/*.js"
+            ],
+            "pathMapping": {
+                "/": "${workspaceFolder}/fe-svc",
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Compound",
+            "configurations": [
+                "gw-debug",
+                "logger-debug",
+                "phonebook-debug",
+                "ratelimiter-debug",
+                "fe-svc-debug"
+            ]
+        }
+    ]
+}

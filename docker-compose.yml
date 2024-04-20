@@ -1,0 +1,133 @@
+services:
+  ratelimiter-svc1:
+    build: ./ratelimiter-svc
+    ports:
+      - "4001:4000"
+    env_file:
+      - ./ratelimiter-svc/.env
+    environment:
+      - HOSTNAME=ratelimiter-svc1
+      - PORT=4001
+    depends_on:
+      - redis
+      - rabbitmq
+
+  ratelimiter-svc2:
+    build: ./ratelimiter-svc
+    ports:
+      - "4002:4000"
+    env_file:
+      - ./ratelimiter-svc/.env
+    environment:
+      - HOSTNAME=ratelimiter-svc2
+      - PORT=4002
+    depends_on:
+      - redis
+      - rabbitmq
+
+  ratelimiter-svc3:
+    build: ./ratelimiter-svc
+    ports:
+      - "4003:4000"
+    env_file:
+      - ./ratelimiter-svc/.env
+    environment:
+      - HOSTNAME=ratelimiter-svc3
+      - PORT=4003
+    depends_on:
+      - redis
+      - rabbitmq
+
+  ratelimiter-svc4:
+    build: ./ratelimiter-svc
+    ports:
+      - "4004:4000"
+    env_file:
+      - ./ratelimiter-svc/.env
+    environment:
+      - HOSTNAME=ratelimiter-svc4
+      - PORT=4004
+    depends_on:
+      - redis
+      - rabbitmq
+
+
+  gateway-lb-svc:
+    build: ./gateway-lb
+    ports:
+      - "3000:3000"
+    environment:
+      - HOSTNAME=gateway-lb-svc
+      - PORT=3000
+      - SERVICE_ID=gateway-lb-svc
+      - RATELIMITERS=http://ratelimiter-svc1:4001,http://ratelimiter-svc2:4002,http://ratelimiter-svc3:4003,http://ratelimiter-svc4:4004
+      - PHONEBOOK_URL=http://phonebook-svc:5000
+      - LOGGER_URL=http://logger-svc:4500
+      - REDIS_HOST=redis
+      - MONGODB_URL=mongodb://mongodb:27017
+      - AMPQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - ratelimiter-svc1
+      - ratelimiter-svc2
+      - ratelimiter-svc3
+      - ratelimiter-svc4
+
+  logger-svc:
+    build: ./logger-svc
+    ports:
+      - "4500:4500"
+    environment:
+      - HOSTNAME=localhost
+      - PORT=4500
+      - SERVICE_ID=logger-svc
+      - AMPQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+      
+  phonebook-svc:
+    build: ./phonebook-svc
+    ports:
+      - "5000:5000"
+    environment:
+      - HOSTNAME=phonebook-svc
+      - PORT=5000
+      - SERVICE_ID=phonebook-svc
+      - AMPQ_URL=amqp://guest:guest@rabbitmq:5672
+      - MONGO_URL=mongodb://mongodb:27017
+  fe-svc:
+    build: ./fe-svc
+    ports:
+      - "7000:7000"
+    environment:
+      - HOSTNAME=fe-svc
+      - PORT=7000
+      - SERVICE_ID=fe-svc
+      - GATEWAY_URL=http://gateway-lb-svc:3000
+      - LOGGER_URL=http://logger-svc:4500
+      - PHONEBOOK_URL=http://phonebook-svc:5000
+      - REDIS_HOST=redis
+      - MONGODB_URL=mongodb://mongodb:27017
+      - AMPQ_URL=amqp://guest:guest@rabbitmq:5672
+    depends_on:
+      - gateway-lb-svc
+      - logger-svc
+      - phonebook-svc
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+volumes:
+  mongodb_data:

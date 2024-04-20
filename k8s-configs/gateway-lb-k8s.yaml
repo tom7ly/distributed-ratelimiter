@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: phonebook-service
+spec:
+  selector:
+    app: phonebook-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phonebook-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: phonebook-service
+  template:
+    metadata:
+      labels:
+        app: phonebook-service
+    spec:
+      containers:
+      - name: phonebook-service
+        image: phonebook-service:latest
+        ports:
+        - containerPort: 3000

@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: phonebook-svc
+spec:
+  selector:
+    app: phonebook-svc
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phonebook-svc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: phonebook-svc
+  template:
+    metadata:
+      labels:
+        app: phonebook-svc
+    spec:
+      containers:
+      - name: phonebook-svc
+        image: phonebook-svc:latest
+        ports:
+        - containerPort: 5000
