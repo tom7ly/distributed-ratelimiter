@@ -7,6 +7,15 @@ The diagram below provides a visual representation of the project architecture:
 
 <img src="archi-ss-1.png" alt="Project Architecture" width="500">
 
+### The architecture consists of:
+- Gateway Loadbalancer
+- Multiple ratelimiters (Configureable)
+- Logger Service
+- Phonebook Service (The actual API)
+- RabbitMQ
+- Redis
+- MongoDB
+- React Client
 
 # Installation:
 Use the docker-compose.yml file provided in the root folder of the repository.
@@ -40,8 +49,6 @@ docker-compose up
 It takes time for all services to be ready, and as such, the gateway-lb, which initiates a healthcheck polling on startup, wont allow any requests to pass through and will respond 
 with an error saying which services are up. It takes about 30 seconds for all services to become ready.
 
-## Note3
-If the frontend crashes on startup, simply refresh the browser, it's because the services weren't up in time and I didnt manage to add a check for that yet.
 
 # How the Ratelimiters work:
 The environment has ratelimit-instances and ratelimit-services
@@ -49,16 +56,7 @@ The environment has ratelimit-instances and ratelimit-services
 ratelimit-instance: the mechanism configured globally to limit x-requests in a timewindow of y-seconds
 ratelimit-svc-i: the actual contained service that is recieving requests from the gateway-lb 
 ``` 
-Currently there are 2 ratelimit-instances configured as follows:
-```
-RATELIMIT1_WINDOW=15
-RATELIMIT1_MAX=3
 
-RATELIMIT2_WINDOW=30
-RATELIMIT2_MAX=6
-```
-Where the the RATELIMIT_WINDOW-I means how many requests a ratelimit-instance approves before it starts blocking.
-You can configure it in /ratelimit-svc/.env
 #
 
 - The gateway recieves a response
@@ -196,7 +194,7 @@ Array of IContact
   - Frontend engine, provides a GUI to monitor the architecture
   - Connected to **logger-svc** via websocket
   - On the left, a user may monitor the logs recieved
-  - On the 
+  - On the right you are able to see the status of each key per client, and how many requests remain per rate-limiter
 
 <img src="rlui-ss1.png" alt="Project Architecture" width="500">
 <img src="rlui-ss2.png" alt="Project Architecture" width="500">
