@@ -5,7 +5,9 @@ This project is designed to efficiently manage and handle high volumes of traffi
 The rate limit services are deployed to prevent any single service from being overwhelemd with too many requests, thereby maintaining the overall system performance and stability. 
 The diagram below provides a visual representation of the project architecture:
 
-<img src="archi-ss-1.png" alt="Project Architecture" width="500">
+<img src="./documentation/archi-ss-1.png" alt="Project Architecture" width="500">
+
+<img src="./documentation/ratelimiter-svc-ss.png" alt="Project Architecture" width="500">
 
 ### The architecture consists of:
 - Gateway Loadbalancer
