@@ -198,8 +198,9 @@ Array of IContact
   - On the left, a user may monitor the logs recieved
   - On the right you are able to see the status of each key per client, and how many requests remain per rate-limiter
 
-<img src="rlui-ss1.png" alt="Project Architecture" width="500">
-<img src="rlui-ss2.png" alt="Project Architecture" width="500">
+<img src="./documentation/rlui-ss1.png" alt="Project Architecture" width="500">
+
+<img src="./documentation/rlui-ss2.png" alt="Project Architecture" width="500">
 
 
 <br/>
